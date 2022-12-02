@@ -11,6 +11,8 @@ Classes
     ComputerPlayer (subclass of Player
     Game
 
+    Stored on dan1elrobb github
+
 """
 import random
 
