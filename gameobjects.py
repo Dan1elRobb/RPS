@@ -12,6 +12,8 @@ Classes
     Game
 
     Stored on dan1elrobb github
+    thgis is me exploring github
+
 
 """
 import random
@@ -64,6 +66,7 @@ class PlayerObject:
         ----------
             name: str
                 name of object - must be in allowable objects
+
         """
         name = name.lower()
         if name not in self.allowable_objects:
