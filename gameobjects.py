@@ -66,6 +66,7 @@ class PlayerObject:
         ----------
             name: str
                 name of object - must be in allowable objects
+                changed value error text
 
         """
         name = name.lower()
