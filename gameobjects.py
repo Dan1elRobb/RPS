@@ -251,12 +251,18 @@ class Game:
 
     def report_round(self):
         """ returns a message reporting on what the players played and what the result of the round was """
-        return f'{self.players[0]} played {self.players[0].current_object} \n {self.players[1]} played {self.players[1].current_object} \n winner was {self.round_winner} '
+        return f'{self.players[0].name} chose {self.players[0].current_object} \n{self.players[1].name} chose {self.players[1].current_object} \n{self.round_winner} won this round '
 
     def report_score(self):
         """ Returns a string with the current scores """
-        return f'After {self.current_round} rounds {self.players[0].name}  : {self.score_one} {self.players[1].name} : {self.score_two}'
+        return f'After {self.current_round} rounds {self.players[0].name} has scored {self.score_one} \n{self.players[1].name} has scored {self.score_two}'
 
     def report_winner(self):
         """ Returns a message with the overall winner """
-        return f'{self.round_winner} is the winner'
+        if self.score_one > self.score_two:
+            return f'{self.players[0].name} is the winner'
+        elif self.score_two > self.score_one:
+            return f'{self.players[1].name} is the winner'
+        else:
+            return 'draw'
+

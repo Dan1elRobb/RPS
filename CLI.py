@@ -50,7 +50,9 @@ class CLInterface:
                 hi = True
 
 
-
+if __name__ == '__main__':
+    CLI = CLInterface()
+    CLI.run_sequence()
 
 
 
