@@ -156,7 +156,7 @@ class HumanPlayer(Player):
 
     def choose_object(self, choice):
         """ Chooses a PlayerObject for the player"""
-        self.current_object = choice
+        self.current_object = PlayerObject(choice)
 
 
 # The ComputerPlayer Class is a subclass of Player representing a Computer player
@@ -224,17 +224,19 @@ class Game:
         """ Finds the winner of the current round """
         if self.players[0].current_object > self.players[1].current_object:
             self.round_winner = self.players[0]
-            self.round_result = 'win'
+            self.round_result = 'loss'
             self.score_one += 1
         if self.players[1].current_object > self.players[0].current_object:
             self.round_winner = self.players[1]
-            self.round_result = 'loss'
+            self.round_result = 'win'
             self.score_two += 1
         else:
             self.round_winner = None
 
     def next_round(self):
         """ Resets game objects ready for a new round """
+        self.players[0].current_object = None
+        self.players[1].current_object = None
         self.current_round += 1
 
     def is_finished(self):
@@ -244,11 +246,13 @@ class Game:
 
     def reset(self):
         """ Resets the whole game, setting current round to 0 and player scores to 0"""
-        Player.reset_object()
+        self.players[0].current_object = None
+        self.players[1].current_object = None
+        self.current_round = 0
 
     def report_round(self):
         """ returns a message reporting on what the players played and what the result of the round was """
-        return f'Player one played {self.players[0].current_object} player 2 played {self.players[1].current_object} winner was {self.round_winner} '
+        return f'{self.players[0]} played {self.players[0].current_object} \n {self.players[1]} played {self.players[1].current_object} \n winner was {self.round_winner} '
 
     def report_score(self):
         """ Returns a string with the current scores """
