@@ -43,6 +43,8 @@ def finished_game(my_game):
     my_game.players[1].choose_object()
     my_game.find_winner()
     my_game.next_round()
+    test = my_game.report_score()
+    print(test)
     return my_game
 
 

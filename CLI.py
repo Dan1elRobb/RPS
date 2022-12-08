@@ -8,7 +8,7 @@ class CLInterface:
         self.computerplayer = ComputerPlayer()
         self.humanplayer = HumanPlayer()
 
-    def players(self):
+    def set_up(self):
         print('Hello and welcome to rock paper scissors lizard spock')
         playerone = input('Will player one be a computer (c) or human(h)')
         if playerone.lower()[0] == 'h':
@@ -33,6 +33,21 @@ class CLInterface:
         self.computerplayer.choose_object()
         self.humanplayer.choose_object(choice)
 
+    def run_game(self):
+        while not self.game.is_finished():
+            self.get_choices()
+            print(self.game.report_round())
+            print(self.game.report_score())
+        print(self.game.report_winner())
+
+    def run_sequence(self):
+        hi = False
+        while not hi:
+            self.set_up()
+            self.run_game()
+            quit = input('Play again? (y/n)')
+            if quit.lower()[0] == 'n':
+                hi = True
 
 
 

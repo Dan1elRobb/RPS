@@ -241,8 +241,7 @@ class Game:
 
     def is_finished(self):
         """ Checks if game is finished """
-        if self.current_round == self.max_rounds:
-            self.finished = True
+        return self.current_round == self.max_rounds
 
     def reset(self):
         """ Resets the whole game, setting current round to 0 and player scores to 0"""
@@ -256,8 +255,8 @@ class Game:
 
     def report_score(self):
         """ Returns a string with the current scores """
-        return f'Player 1 : {self.score_one} Player 2 : {self.score_two}'
+        return f'After {self.current_round} rounds {self.players[0].name}  : {self.score_one} {self.players[1].name} : {self.score_two}'
 
     def report_winner(self):
         """ Returns a message with the overall winner """
-        return f'Winner : {self.round_winner}'
+        return f'{self.round_winner} is the winner'
