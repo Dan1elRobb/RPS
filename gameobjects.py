@@ -1,21 +1,3 @@
-
-"""
-
-Module contains the class objects that control the underlying logic for rock-paper scissors game.
-...
-Classes
--------
-    PlayerObject
-    Player
-    HumanPlayer (subclass of Player)
-    ComputerPlayer (subclass of Player
-    Game
-
-    Stored on dan1elrobb github
-    thgis is me exploring github
-
-
-"""
 import random
 
 # constants
@@ -32,7 +14,6 @@ RPS_WIN_DICT = {'rock': ['scissors'],
                 'paper': ['rock'],
                 }
 
-
 # PlayerObject represents an object that a player could choose
 class PlayerObject:
     """
@@ -46,6 +27,7 @@ class PlayerObject:
         list of allowable objects
     win_dict: dict
         keys are allowable objects, values is list of what keys will beat
+    ...
     Methods
     -------
     random_objects (class method)
@@ -61,25 +43,21 @@ class PlayerObject:
     def __init__(self, name):
         """
         Constructs the attributes for the PlayerObject
-
         Parameters
         ----------
             name: str
                 name of object - must be in allowable objects
-                changed value error text
-
         """
-        name = name.lower()
-        if name not in self.allowable_objects:
+        if name.lower() in self.allowable_objects:
+            self.name = name.lower()
+        else:
             raise ValueError('THIS IS NOT ROCK PAPER SCISSORS LIZARD SPOCK U PAGAN')
-        self.name = name
 
     @classmethod
     def random_object(cls):
         """
         Returns a random object from amongst the allowable objects
         """
-        # The allowable objects are in cls.allowable_objects
         return PlayerObject(random.choice(cls.allowable_objects))
 
     @classmethod
@@ -87,7 +65,6 @@ class PlayerObject:
         """
         Sets the allowable objects and the win_dict for the class
         """
-        # Leave this for now!
         ...
 
     def __eq__(self, other):
@@ -113,7 +90,6 @@ class PlayerObject:
 class Player:
     """
     A class to represent a player of the game
-
     Attributes
     __________
         name: str
@@ -123,7 +99,6 @@ class Player:
         current_object: PlayerObject or None
             What the player's current object is None for not selected
     """
-
     def __init__(self, name=None):
         """
         Constructs the necessary attributes for the Player class
@@ -153,7 +128,6 @@ class Player:
 # The HumanPlayer Class is a subclass of Player representing a human player
 class HumanPlayer(Player):
     """ Subclass of Player representing a human player (PC) """
-
     def choose_object(self, choice):
         """ Chooses a PlayerObject for the player"""
         self.current_object = PlayerObject(choice)
@@ -162,7 +136,6 @@ class HumanPlayer(Player):
 # The ComputerPlayer Class is a subclass of Player representing a Computer player
 class ComputerPlayer(Player):
     """ Subclass of Player representing a Computer player (NPC) """
-
     def __init__(self):
         """ Constructs super Player object with name "Computer """
         super().__init__('Computer')
@@ -174,25 +147,6 @@ class ComputerPlayer(Player):
 
 # The Game class contains the instructions for running the game
 class Game:
-    """
-    A class representing the Rock, Paper Scissors Game
-    Attributes
-    __________
-        allowable_objects (opt)
-            list of allowable objects
-        win_dict (opt)
-            dict showing what objects the object in the key beats
-        current_round: int
-            the current round
-        max_rounds: int
-            the maximum rounds that can be played
-        players:
-            list of the players in the game
-        round_result
-            None (not played), draw or win
-        round_winner
-            the PlayerObject for the round winner (None if no winner)
-    """
 
     def __init__(self, allowable_objects=None, win_dict=None):
         if allowable_objects is None:
@@ -209,8 +163,10 @@ class Game:
         self.score_two = 0
 
     def add_human_player(self, name=None):
-        """ Add a human player with their name and appends it to players"""
-        self.players.append(HumanPlayer(name))
+        """ Add a human player with their name """
+        player = HumanPlayer(name)
+        self.players.append(player)
+        return player
 
     def add_computer_player(self):
         """ Add a computer player (no name) """
@@ -218,25 +174,30 @@ class Game:
 
     def set_max_rounds(self, mr):
         """ Set the maximum number of rounds """
+        if not isinstance(mr, int):
+            raise TypeError("Max rounds must be an integer")
         self.max_rounds = mr
 
     def find_winner(self):
         """ Finds the winner of the current round """
-        if self.players[0].current_object > self.players[1].current_object:
-            self.round_winner = self.players[0]
-            self.round_result = 'loss'
-            self.score_one += 1
-        if self.players[1].current_object > self.players[0].current_object:
-            self.round_winner = self.players[1]
-            self.round_result = 'win'
-            self.score_two += 1
-        else:
+        choice = [player.current_object for player in self.players]
+        if choice[0] == choice[1]:
+            self.round_result = "draw"
             self.round_winner = None
+        else:
+            self.round_result = "win"
+            if choice[0] > choice[1]:
+                self.round_winner = self.players[0]
+            else:
+                self.round_winner = self.players[1]
+            self.round_winner.win_round()
 
     def next_round(self):
         """ Resets game objects ready for a new round """
-        self.players[0].current_object = None
-        self.players[1].current_object = None
+        self.round_result = None
+        self.round_winner = None
+        for player in self.players:
+            player.reset_object()
         self.current_round += 1
 
     def is_finished(self):
@@ -245,9 +206,12 @@ class Game:
 
     def reset(self):
         """ Resets the whole game, setting current round to 0 and player scores to 0"""
-        self.players[0].current_object = None
-        self.players[1].current_object = None
         self.current_round = 0
+        self.round_result = None
+        self.round_winner = None
+        for player in self.players:
+            player.score = 0
+            player.reset_object()
 
     def report_round(self):
         """ returns a message reporting on what the players played and what the result of the round was """
@@ -255,14 +219,16 @@ class Game:
 
     def report_score(self):
         """ Returns a string with the current scores """
-        return f'After {self.current_round} rounds {self.players[0].name} has scored {self.score_one} \n{self.players[1].name} has scored {self.score_two}'
+        score_msg = f"After {self.current_round} rounds:\n"
+        score_msg += "\n".join([f"{player.name} has scored {player.score}" for player in self.players])
+        return score_msg
 
     def report_winner(self):
         """ Returns a message with the overall winner """
-        if self.score_one > self.score_two:
-            return f'{self.players[0].name} is the winner'
-        elif self.score_two > self.score_one:
-            return f'{self.players[1].name} is the winner'
+        if self.players[0].score > self.players[1].score:
+            win = f"{self.players[0].name} won"
+        elif self.players[0].score < self.players[1].score:
+            win = f"{self.players[1].name} won"
         else:
-            return 'draw'
-
+            win = "Draw"
+        return win
