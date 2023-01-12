@@ -1,8 +1,7 @@
 import tkinter as tk
 from gameobjects import Game, PlayerObject, RPS_OBJECTS, RPS_WIN_DICT
-from functools import partial
 from PIL import ImageTk, Image
-
+#Creating images to place on buttons with PIL
 rock = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\the-rock-eyebrow-dwayne-johnson.avif")
 mark = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\Mark_Zuckerberg_F8_2019_Keynote_(32830578717)_(cropped).jpg")
 scissors = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\scissors.jpg")
@@ -137,12 +136,9 @@ class Gamer(tk.Frame):
 
 
     def set_up(self):
-        obj_str = ", ".join(PlayerObject.allowable_objects[:-1]) + f"\n or {PlayerObject.allowable_objects[-1]}"
-        self.report_message.set(f"Choose {obj_str} to start")
+        self.report_message.set('Make a move to begin')
         self.results_message.set(
-            f"Welcome {self.game.players[0].name}. You have {self.game.max_rounds} rounds to play")
-        # Focus on the current frame (so that keystrokes binds work)
-        self.focus()
+            f"Welcome {self.game.players[0].name}. there are {self.game.max_rounds} left")
 
 
     def select_object(self, item):
@@ -162,8 +158,11 @@ class Gamer(tk.Frame):
 
             if self.game.is_finished():
                 result_msg += "\n" + self.game.report_winner()
-                for btn in self.action_buttons.values():
-                    btn.config(state=tk.DISABLED)
+                self.rockbutton.config(state=tk.DISABLED)
+                self.markbutton.config(state=tk.DISABLED)
+                self.paperbutton.config(state=tk.DISABLED)
+                self.spockbutton.config(state=tk.DISABLED)
+                self.scissorsbutton.config(state=tk.DISABLED)
             else:
                 result_msg += f"\nYou have {self.game.max_rounds - self.game.current_round} rounds left to play"
 
@@ -180,7 +179,6 @@ class Gamer(tk.Frame):
 
     def reset_game(self):
         self.restart_game()
-        # Switch to the GameOptionsGUI frame.
         self.controller.show_frame("game_options")
 
 
