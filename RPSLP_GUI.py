@@ -1,17 +1,18 @@
 import tkinter as tk
 from gameobjects import Game, PlayerObject, RPS_OBJECTS, RPS_WIN_DICT
 from PIL import ImageTk, Image
+from functools import partial
 #Creating images to place on buttons with PIL
-rock = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\the-rock-eyebrow-dwayne-johnson.avif")
-mark = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\Mark_Zuckerberg_F8_2019_Keynote_(32830578717)_(cropped).jpg")
-scissors = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\scissors.jpg")
-paper = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\61qSdyDYbZL._SL1185_.jpg")
-spock = PhotoImage(file = "C:\Users\danie\OneDrive\Documents\School\CODING\spock.jpg")
-rockimage = rock.subsample(1, 2)
-markimage = mark.subsample(1,2)
-scissorsimage = scissors.subsample(1,2)
-paperimage = paper.subsample(1,2)
-spockimage = spock.subsample(1,2)
+rock = Image.open(r"C:\Users\danie\OneDrive\Documents\School\CODING\rock.jpg")
+mark = Image.open(r"C:\Users\danie\OneDrive\Documents\School\CODING\Mark_Zuckerberg_F8_2019_Keynote_(32830578717)_(cropped).jpg")
+scissors = Image.open(r"C:\Users\danie\OneDrive\Documents\School\CODING\scissors.jpg")
+paper = Image.open(r"C:\Users\danie\OneDrive\Documents\School\CODING\61qSdyDYbZL._SL1185_.jpg")
+spock = Image.open(r"C:\Users\danie\OneDrive\Documents\School\CODING\spock.jpg")
+rockimage = rock.resize((60,60),Image.LANCZOS)
+markimage = mark.resize((60,60),Image.LANCZOS)
+scissorsimage = scissors.resize((60,60),Image.LANCZOS)
+paperimage = paper.resize((60,60),Image.LANCZOS)
+spockimage = spock.resize((60,60),Image.LANCZOS)
 
 
 class GameApp(tk.Tk):
@@ -111,11 +112,17 @@ class Gamer(tk.Frame):
 
         self.outcome = tk.Label(self, textvariable=self.report_message, bg="red", fg="white", width=35)
 
-        self.rockbutton = tk.Button(self, image=rockimage)
-        self.markbutton = tk.Button(self, image=markimage)
-        self.paperbutton = tk.Button(self, image=paperimage)
-        self.spockbutton = tk.Button(self, image=spockimage)
-        self.scissorsbutton = tk.Button(self, image=scissorsimage)
+        self.rockimg = ImageTk.PhotoImage(rockimage)
+        self.markimg = ImageTk.PhotoImage(markimage)
+        self.scissorsimg = ImageTk.PhotoImage(scissorsimage)
+        self.paperimg = ImageTk.PhotoImage(paperimage)
+        self.spockimg = ImageTk.PhotoImage(spockimage)
+
+        self.rockbutton = tk.Button(self, image=self.rockimg,command=partial(self.select_object, 'rock'))
+        self.markbutton = tk.Button(self, image=self.markimg,command=partial(self.select_object, 'lizard'))
+        self.paperbutton = tk.Button(self, image=self.paperimg,command=partial(self.select_object, 'paper'))
+        self.spockbutton = tk.Button(self, image=self.spockimg,command=partial(self.select_object, 'spock'))
+        self.scissorsbutton = tk.Button(self, image=self.scissorsimg, command=partial(self.select_object, 'scissors'))
 
         self.quit_button = tk.Button(self, text="Quit", width=15, command=self.controller.destroy, bg='red', fg='blue')
         self.options_button = tk.Button(self, text="Change Options (O)", width=15, command=self.reset_game, bg='red', fg='blue')
@@ -126,10 +133,10 @@ class Gamer(tk.Frame):
         self.paperbutton.grid(row=5, column=1)
         self.spockbutton.grid(row=6, column=1)
         self.scissorsbutton.grid(row=7, column=1)
-        self.outcome.grid(row=1, column=1, rowspan=3)
+        self.outcome.grid(row=3, column=0, rowspan=3)
         self.results.grid(row=2, column=0, columnspan=2, pady=5)
-        self.quit_button.grid(row=3, column=0, pady=(5, 10), rowspan=2)
-        self.options_button.grid(row=4, column=1, pady=(5, 10))
+        self.quit_button.grid(row=9, column=0, pady=(5, 10), rowspan=2)
+        self.options_button.grid(row=9, column=1, pady=(5, 10))
 
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=1)

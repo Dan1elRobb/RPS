@@ -215,7 +215,7 @@ class Game:
 
     def report_round(self):
         """ returns a message reporting on what the players played and what the result of the round was """
-        return f'{self.players[0].name} chose {self.players[0].current_object} \n{self.players[1].name} chose {self.players[1].current_object} \n{self.round_winner} won this round '
+        return f'{self.players[0].name} chose {self.players[0].current_object.name} \n{self.players[1].name} chose {self.players[1].current_object.name} \n{self.round_winner} won this round '
 
     def report_score(self):
         """ Returns a string with the current scores """
